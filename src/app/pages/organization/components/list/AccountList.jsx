@@ -1,15 +1,14 @@
 import AppButton from "@/app/components/common/buttons/AppButton";
 import { checkOptionList } from "@/app/data/options/checkOptions";
-import { Check } from "@mui/icons-material";
+import { Check, Close } from "@mui/icons-material";
 import React, { useState } from "react";
 
 const AccountList = ({ list, selectedAccountList, setSelectedAccountList }) => {
   const [activeButton, setActiveButton] = useState(null);
   const selectAccount = (status, account) => {
     let newAccount = { ...account };
-    let newSelectedAccountList = selectedAccountList !== null
-      ? [...selectedAccountList]
-      : [];
+    let newSelectedAccountList =
+      selectedAccountList !== null ? [...selectedAccountList] : [];
 
     if (
       newSelectedAccountList.length > 0 &&
@@ -67,6 +66,19 @@ const AccountList = ({ list, selectedAccountList, setSelectedAccountList }) => {
 
   console.log("new selected", selectedAccountList);
 
+  const deselect = (id) => {
+    if (selectedAccountList?.length > 0) {
+      let index = selectedAccountList.findIndex(
+        (selected_account) => selected_account.id === id
+      );
+
+      if (index > -1) {
+        selectedAccountList.splice(index, 1);
+        activeButton !== null ? setActiveButton(null) : setActiveButton(id);
+      }
+    }
+  };
+
   return (
     <div>
       <div className="content-title">
@@ -93,17 +105,28 @@ const AccountList = ({ list, selectedAccountList, setSelectedAccountList }) => {
             </div>
             <div className="flex-gap-6">
               {checkOptionList?.map((option, index) => (
-                
-                  <AppButton
+                <AppButton
                   key={index}
-                    onClick={() => selectAccount(option.name, account)}
-                    color={"white"}
-                    label={option.name}
-                    icon={isChecked(account.id, option.name) && <Check fontSize="small" className="btn-icon" />}
-                  />
-            
+                  onClick={() => selectAccount(option.name, account)}
+                  color={"white"}
+                  label={option.name}
+                  icon={
+                    isChecked(account.id, option.name) && (
+                      <Check fontSize="small" className="btn-icon" />
+                    )
+                  }
+                />
               ))}
             </div>
+            {selectedAccountList?.find(
+              (selected_acc) => selected_acc.id === account.id
+            ) && (
+              <Close
+                onClick={() => deselect(account.id)}
+                fontSize="small"
+                className="close-icon margin-left-6px"
+              />
+            )}
           </li>
         ))}
       </ul>

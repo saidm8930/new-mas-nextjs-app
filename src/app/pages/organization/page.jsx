@@ -9,7 +9,6 @@ import { organizationList } from "@/app/data/organizations/organizationList";
 import OrganizationList from "./components/list/OrganizationList";
 import AccountList from "./components/list/AccountList";
 import AppButton from "@/app/components/common/buttons/AppButton";
-import { StepContent } from "@mui/material";
 import SelectedAccountForm from "./components/forms/SelectedAccountForm";
 import { savedSelectedAccounts } from "@/app/data/accounts/savedSelectedAccounts";
 import PreviewForm from "./components/forms/PreviewForm";
@@ -20,6 +19,7 @@ const ProductPage = () => {
   const [openOrganization, setOpenOrganization] = useState(null);
   const [selectedAccountList, setSelectedAccountList] = useState(null);
   const [currentToDisplay, setCurrentToDisplay] = useState("accounts");
+  const [saved, setSaved] = useState(null);
 
   useEffect(() => {
     getOrganizationList();
@@ -33,7 +33,7 @@ const ProductPage = () => {
   };
 
   const onCurrentToDisplay = (display) => {
-      setCurrentToDisplay(display);
+    setCurrentToDisplay(display);
   };
 
   const getOrganizationList = async () => {
@@ -48,6 +48,14 @@ const ProductPage = () => {
     if (response) {
       setCurOrganizationList(response);
       console.log("response", response);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentToDisplay === "selectedAccounts") {
+      setCurrentToDisplay("accounts");
+    } else if (currentToDisplay === "preview") {
+      setCurrentToDisplay("selectedAccounts");
     }
   };
 
@@ -87,7 +95,10 @@ const ProductPage = () => {
             />
           )) ||
           (currentToDisplay === "selectedAccounts" && (
-            <SelectedAccountForm list={selectedAccountList} />
+            <SelectedAccountForm
+              list={selectedAccountList}
+              setSaved={setSaved}
+            />
           )) ||
           (currentToDisplay === "preview" && <PreviewForm />)
         }
@@ -95,14 +106,30 @@ const ProductPage = () => {
         <AppModal.Footer>
           <div className="flex-justify-right button-container">
             <AppButton onClick={handleOnClose} label={"Cancel"} />
-            <AppButton
-              onClick={() => onCurrentToDisplay("selectedAccounts")}
-              label={"Next"}
-            />
-             <AppButton
-              onClick={() => onCurrentToDisplay("preview")}
-              label={"Preview"}
-            />
+            {currentToDisplay !== "accounts" && (
+              <AppButton onClick={() => handlePrevious()} label={"Previous"} />
+            )}
+            {selectedAccountList?.length > 0 &&
+              currentToDisplay === "accounts" && (
+                <AppButton
+                  onClick={() => onCurrentToDisplay("selectedAccounts")}
+                  label={"Next"}
+                />
+              )}
+            {selectedAccountList?.length > 0 &&
+              selectedAccountList.length === savedSelectedAccounts.length &&
+              currentToDisplay === "selectedAccounts" && (
+                <AppButton
+                  onClick={() => onCurrentToDisplay("preview")}
+                  label={"Preview"}
+                />
+              )}
+            {currentToDisplay === "preview" && (
+              <AppButton
+                onClick={() => onCurrentToDisplay("preview")}
+                label={"Save & Print"}
+              />
+            )}
           </div>
         </AppModal.Footer>
       </AppModal>

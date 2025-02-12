@@ -2,6 +2,7 @@ import { checkOptionList } from "@/app/data/options/checkOptions";
 import Image from "next/image";
 import React, { useState } from "react";
 import BalanceReviewTaable from "../table/BalanceReviewTaable";
+import { savedSelectedAccounts } from "@/app/data/accounts/savedSelectedAccounts";
 
 const PreviewForm = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -103,7 +104,7 @@ const PreviewForm = () => {
             </p>
           </div>
           <div className="padding-horizontal-20px">
-            <BalanceReviewTaable />
+            <BalanceReviewTaable list={savedSelectedAccounts} />
           </div>
           <div className="padding-20px">
             <div className="padding-20px">

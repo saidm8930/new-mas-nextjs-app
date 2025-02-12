@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import AppButton from "@/app/components/common/buttons/AppButton";
 import { savedSelectedAccounts } from "@/app/data/accounts/savedSelectedAccounts";
 
-const SelectedAccountForm = ({ list }) => {
+const SelectedAccountForm = ({ list, setSaved}) => {
   const [balanceDate, setBalanceDate] = useState(dayjs(new Date()));
   const [statementStartDate, setStatementStartDate] = useState(
     dayjs(new Date())
@@ -27,8 +27,33 @@ const SelectedAccountForm = ({ list }) => {
     }
 
     savedSelectedAccounts.push(newAccount);
-    activeButton !== null ? setActiveButton(null) : setActiveButton(account.id);
+    if(activeButton !== null){
+        setActiveButton(null)
+        setSaved(null)
+    }else{
+        setActiveButton(account.id);
+        setSaved(account.id)
+    }
+
   };
+
+  const deselect = (id) => {
+    if(list?.length > 0){
+        let index = list.findIndex((selected_account) => selected_account.id === id);
+
+        if(index > -1){
+            list.splice(index, 1)
+            if(activeButton !== null){
+                setActiveButton(null)
+                setSaved(null)
+            }else{
+                setActiveButton(id);
+                setSaved(id)
+            }
+        }
+
+    }
+  }
 
   console.log("saved accounts ", savedSelectedAccounts);
 
@@ -128,7 +153,7 @@ const SelectedAccountForm = ({ list }) => {
               </div>
               <div className="flex-justify-right padding-10px border-top ">
                 {!isSaved(account.id) && (
-                  <AppButton color="white" label={"Remove"} />
+                  <AppButton onClick={() => deselect(account.id)} color="white" label={"Remove"} />
                 )}
                 <AppButton
                   color="white"

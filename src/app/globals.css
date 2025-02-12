@@ -430,7 +430,7 @@ main {
   transition: all var(--duration);
 }
 
-.app-button:hover {
+.app-button:hover, .close-icon:hover {
   background-image: linear-gradient(to bottom right, #d6a12f, #996b0f);
   color: white;
 }
@@ -608,13 +608,14 @@ button {
   border: 1px solid #e6e6e6;
 }
 
-.btn-icon {
+.btn-icon, .close-icon {
   background-color: #e4e4e4;
   color: black;
   padding: 4px;
   width: 10px;
   height: 10px;
   border-radius: 50px;
+  transition: all var(--duration);
 }
 
 .to {
@@ -699,6 +700,10 @@ button {
 
 .margin-vertical-5px {
   margin: 5px 0px;
+}
+
+.margin-left-6px{
+  margin-left: 6px;
 }
 
 .text-center {
