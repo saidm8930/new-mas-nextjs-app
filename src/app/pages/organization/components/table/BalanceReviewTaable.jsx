@@ -19,7 +19,7 @@ const BalanceReviewTaable = ({ list }) => {
                 <td>{index + 1}</td>
                 <td>{account.number}</td>
                 <td>{account.name}</td>
-                <td>300000</td>
+                <td>{account.balance}</td>
               </tr>
             )
         )}

@@ -1,7 +1,8 @@
 "use client";
 
 import AppModal from "@/app/components/common/modals/AppModal";
-import React, { useEffect, useState } from "react";
+import { useReactToPrint } from "react-to-print";
+import React, { useEffect, useState, useRef } from "react";
 import Dropdown from "@/app/components/common/dropdown/Dropdown";
 import { categoryList } from "@/app/data/categories/categories";
 import service from "@/services";
@@ -20,6 +21,8 @@ const ProductPage = () => {
   const [selectedAccountList, setSelectedAccountList] = useState(null);
   const [currentToDisplay, setCurrentToDisplay] = useState("accounts");
   const [saved, setSaved] = useState(null);
+
+  const contentRef = useRef(null);
 
   useEffect(() => {
     getOrganizationList();
@@ -58,6 +61,8 @@ const ProductPage = () => {
       setCurrentToDisplay("selectedAccounts");
     }
   };
+
+  const print = useReactToPrint({ contentRef });
 
   return (
     <>
@@ -100,7 +105,7 @@ const ProductPage = () => {
               setSaved={setSaved}
             />
           )) ||
-          (currentToDisplay === "preview" && <PreviewForm />)
+          (currentToDisplay === "preview" && <PreviewForm ref={contentRef} />)
         }
       >
         <AppModal.Footer>
@@ -126,7 +131,7 @@ const ProductPage = () => {
               )}
             {currentToDisplay === "preview" && (
               <AppButton
-                onClick={() => onCurrentToDisplay("preview")}
+                onClick={print}
                 label={"Save & Print"}
               />
             )}
